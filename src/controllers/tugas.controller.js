@@ -5,12 +5,20 @@ const moment = require("moment");
 
 
 exports.allTugasbyProject = async (req, res) => {
-    const tugas = await Tugas.find({ projectId: req.params.projectId }); // Function untuk memunculkan semua tugas berdasarkan id project
-    return res.json({
-        success: true,
-        message: `All tugas by project id ${req.params.projectId}`,
-        data: tugas
-    })
+    try {
+        const project = await Project.findById(req.params.projectId);
+        if (!project) { // Jika project tidak ditemukan
+            throw ({ code: "THROW", message: "Project not found" })
+        }
+        const tugas = await Tugas.find({ projectId: req.params.projectId }); // Function untuk memunculkan semua tugas berdasarkan id project
+        return res.json({
+            success: true,
+            message: `All tugas by project id ${req.params.projectId}`,
+            data: tugas
+        })
+    } catch (err) {
+        hedleError.outError(err, res) // Jika terjadi error
+    }
 }
 
 exports.updateTugas = async (req, res) => {
@@ -91,13 +99,21 @@ exports.deleteTugas = async (req, res) => {
 }
 
 exports.tugasNotCompletedbyProject = async (req, res) => {
-    const tugas = await Tugas.find({ // Function untuk memunculkan semua tugas yang belum completed berdasarkan id project
-        projectId: req.params.projectId,
-        status: false
-    });
-    return res.json({
-        success: true,
-        message: `Tugas not completed by project id ${req.params.projectId}`,
-        data: tugas
-    })
+    try {
+        const project = await Project.findById(req.params.projectId);
+        if (!project) { // Jika project tidak ditemukan
+            throw ({ code: "THROW", message: "Project not found" })
+        }
+        const tugas = await Tugas.find({ // Function untuk memunculkan semua tugas yang belum completed berdasarkan id project
+            projectId: req.params.projectId,
+            status: false
+        });
+        return res.json({
+            success: true,
+            message: `Tugas not completed by project id ${req.params.projectId}`,
+            data: tugas
+        })
+    } catch (err) {
+        hedleError.outError(err, res) // Jika terjadi error
+    }
 }
