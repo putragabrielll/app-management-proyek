@@ -11,12 +11,19 @@ exports.allProject = async (req, res) => {
 }
 
 exports.oneProject = async (req, res) => {
-    const project = await Project.findById(req.params.id);
-    return res.json({
-        success: true,
-        message: "One project",
-        data: project
-    })
+    try {
+        const project = await Project.findById(req.params.id);
+        if (!project) {
+            throw ({ code: "THROW", message: "Project not found" })
+        }
+        return res.json({
+            success: true,
+            message: "One project",
+            data: project
+        })
+    } catch (err) {
+        hedleError.outError(err, res)
+    }
 }
 
 exports.updateProject = async (req, res) => {
@@ -28,15 +35,18 @@ exports.updateProject = async (req, res) => {
     // })
 
     try {
-        if (!req.body.name) {
-            throw ({ code: "THROW", message: "Name is required" })
-        }
         const data = {
             name: req.body.name,
             description: req.body.description,
             updatedAt: Date.now()
         }
+        if (!req.body.name) {
+            throw ({ code: "THROW", message: "Name is required" })
+        }
         const project = await Project.findByIdAndUpdate(req.params.id, data);
+        if (!project) {
+            throw ({ code: "THROW", message: "Project not found" })
+        }
         return res.json({
             success: true,
             message: "Project updated successfully",
@@ -73,10 +83,17 @@ exports.createProject = async (req, res) => {
 }
 
 exports.deleteProject = async (req, res) => {
-    const project = await Project.findByIdAndDelete(req.params.id);
-    return res.json({
-        success: true,
-        message: "Project deleted successfully",
-        data: project
-    })
+    try {
+        const project = await Project.findByIdAndDelete(req.params.id);
+        if (!project) {
+            throw ({ code: "THROW", message: "Project not found" })
+        }
+        return res.json({
+            success: true,
+            message: "Project deleted successfully",
+            data: project
+        })
+    } catch (err) {
+        hedleError.outError(err, res)
+    }
 }

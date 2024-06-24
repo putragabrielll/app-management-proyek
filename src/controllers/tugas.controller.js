@@ -1,3 +1,4 @@
+const { Project } = require("../models/data.model");
 const { Tugas } = require("../models/data.model");
 const hedleError = require("../helpers/utils");
 const moment = require("moment");
@@ -14,9 +15,6 @@ exports.allTugasbyProject = async (req, res) => {
 
 exports.updateTugas = async (req, res) => {
     try {
-        if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) {
-            throw ({ code: "THROW", message: "Data cannot be empty" })
-        }
         const data = {
             title: req.body.title,
             description: req.body.description,
@@ -24,7 +22,13 @@ exports.updateTugas = async (req, res) => {
             endTime: new Date((req.body.endTime)).toISOString(),
             updatedAt: Date.now()
         }
+        if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) {
+            throw ({ code: "THROW", message: "Data cannot be empty" })
+        }
         const tugas = await Tugas.findByIdAndUpdate(req.params.id, data);
+        if (!tugas) {
+            throw ({ code: "THROW", message: "Tugas not found" })
+        }
         return res.json({
             success: true,
             message: "Tugas updated successfully",
@@ -37,7 +41,10 @@ exports.updateTugas = async (req, res) => {
     
 exports.createTugasbyProject = async (req, res) => {
     try {
-        if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) {
+        const project = await Project.findById(req.params.projectId);
+        if (!project) {
+            throw ({ code: "THROW", message: "Project not found" })
+        } else if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) {
             throw ({ code: "THROW", message: "Data cannot be empty" })
         } else if (moment(req.body.startTime).isAfter(req.body.endTime, "minute")) {
             throw ({ code: "THROW", message: "Start time cannot be greater than end time" })
@@ -66,10 +73,17 @@ exports.createTugasbyProject = async (req, res) => {
 }
 
 exports.deleteTugas = async (req, res) => {
-    const tugas = await Tugas.findByIdAndDelete(req.params.id);
-    return res.json({
-        success: true,
-        message: "Tugas deleted successfully",
-        data: tugas
-    })
+    try {
+        const tugas = await Tugas.findByIdAndDelete(req.params.id);
+        if (!tugas) {
+            throw ({ code: "THROW", message: "Tugas not found" })
+        }
+        return res.json({
+            success: true,
+            message: "Tugas deleted successfully",
+            data: tugas
+        })
+    } catch (err) {
+        hedleError.outError(err, res)
+    }
 }
