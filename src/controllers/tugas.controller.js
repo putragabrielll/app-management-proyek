@@ -5,7 +5,7 @@ const moment = require("moment");
 
 
 exports.allTugasbyProject = async (req, res) => {
-    const tugas = await Tugas.find({ projectId: req.params.projectId });
+    const tugas = await Tugas.find({ projectId: req.params.projectId }); // Function untuk memunculkan semua tugas berdasarkan id project
     return res.json({
         success: true,
         message: `All tugas by project id ${req.params.projectId}`,
@@ -23,11 +23,11 @@ exports.updateTugas = async (req, res) => {
             endTime: new Date((req.body.endTime)).toISOString(),
             updatedAt: Date.now()
         }
-        if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) {
+        if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) { // Jika data tidak ada atau tidak diisi
             throw ({ code: "THROW", message: "Data cannot be empty" })
         }
         const tugas = await Tugas.findByIdAndUpdate(req.params.id, data);
-        if (!tugas) {
+        if (!tugas) { // Jika tugas tidak ditemukan
             throw ({ code: "THROW", message: "Tugas not found" })
         }
         return res.json({
@@ -36,18 +36,18 @@ exports.updateTugas = async (req, res) => {
             data: tugas
         })
     } catch (err) {
-        hedleError.outError(err, res)
+        hedleError.outError(err, res) // Jika terjadi error
     }
 }
     
 exports.createTugasbyProject = async (req, res) => {
     try {
         const project = await Project.findById(req.params.projectId);
-        if (!project) {
+        if (!project) { // Jika project tidak ditemukan
             throw ({ code: "THROW", message: "Project not found" })
-        } else if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) {
+        } else if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) { // Jika data tidak ada atau tidak diisi
             throw ({ code: "THROW", message: "Data cannot be empty" })
-        } else if (moment(req.body.startTime).isAfter(req.body.endTime, "minute")) {
+        } else if (moment(req.body.startTime).isAfter(req.body.endTime, "minute")) { // Jika start time lebih besar dari end time atau sebaliknya
             throw ({ code: "THROW", message: "Start time cannot be greater than end time" })
         }
         const data = {
@@ -70,14 +70,14 @@ exports.createTugasbyProject = async (req, res) => {
             data: tugas
         })
     } catch (err) {
-        hedleError.outError(err, res)
+        hedleError.outError(err, res) // Jika terjadi error
     }
 }
 
 exports.deleteTugas = async (req, res) => {
     try {
         const tugas = await Tugas.findByIdAndDelete(req.params.id);
-        if (!tugas) {
+        if (!tugas) { // Jika tugas tidak ditemukan
             throw ({ code: "THROW", message: "Tugas not found" })
         }
         return res.json({
@@ -86,12 +86,12 @@ exports.deleteTugas = async (req, res) => {
             data: tugas
         })
     } catch (err) {
-        hedleError.outError(err, res)
+        hedleError.outError(err, res) // Jika terjadi error
     }
 }
 
 exports.tugasNotCompletedbyProject = async (req, res) => {
-    const tugas = await Tugas.find({
+    const tugas = await Tugas.find({ // Function untuk memunculkan semua tugas yang belum completed berdasarkan id project
         projectId: req.params.projectId,
         status: false
     });

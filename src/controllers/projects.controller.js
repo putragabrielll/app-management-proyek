@@ -1,7 +1,7 @@
 const { Project } = require("../models/data.model");
 const hedleError = require("../helpers/utils");
 
-exports.allProject = async (req, res) => {
+exports.allProject = async (req, res) => { // Function untuk memunculkan semua project
     const projects = await Project.find();
     return res.json({
         success: true,
@@ -10,10 +10,10 @@ exports.allProject = async (req, res) => {
     })
 }
 
-exports.oneProject = async (req, res) => {
+exports.oneProject = async (req, res) => {  // Function untuk memunculkan satu project
     try {
         const project = await Project.findById(req.params.id);
-        if (!project) {
+        if (!project) { // Jika project tidak ditemukan
             throw ({ code: "THROW", message: "Project not found" })
         }
         return res.json({
@@ -22,7 +22,7 @@ exports.oneProject = async (req, res) => {
             data: project
         })
     } catch (err) {
-        hedleError.outError(err, res)
+        hedleError.outError(err, res) // Jika terjadi error
     }
 }
 
@@ -40,11 +40,11 @@ exports.updateProject = async (req, res) => {
             description: req.body.description,
             updatedAt: Date.now()
         }
-        if (!req.body.name) {
+        if (!req.body.name) { // Jika name tidak ada atau tidak diisi
             throw ({ code: "THROW", message: "Name is required" })
         }
         const project = await Project.findByIdAndUpdate(req.params.id, data);
-        if (!project) {
+        if (!project) { // Jika project tidak ditemukan
             throw ({ code: "THROW", message: "Project not found" })
         }
         return res.json({
@@ -53,13 +53,13 @@ exports.updateProject = async (req, res) => {
             data: project
         })
     } catch (err) {
-        hedleError.outError(err, res)
+        hedleError.outError(err, res) // Jika terjadi error
     }
 }
 
 exports.createProject = async (req, res) => {
     try {
-        if (!req.body.name) {
+        if (!req.body.name) { // Jika name tidak ada atau tidak diisi
             throw ({ code: "THROW", message: "Name is required" })
         }
         const data = {
@@ -78,14 +78,14 @@ exports.createProject = async (req, res) => {
             data: project
         })
     } catch (err) {
-        hedleError.outError(err, res)
+        hedleError.outError(err, res) // Jika terjadi error
     }
 }
 
 exports.deleteProject = async (req, res) => {
     try {
         const project = await Project.findByIdAndDelete(req.params.id);
-        if (!project) {
+        if (!project) { // Jika project tidak ditemukan
             throw ({ code: "THROW", message: "Project not found" })
         }
         return res.json({
@@ -94,6 +94,6 @@ exports.deleteProject = async (req, res) => {
             data: project
         })
     } catch (err) {
-        hedleError.outError(err, res)
+        hedleError.outError(err, res) // Jika terjadi error
     }
 }
