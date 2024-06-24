@@ -1,4 +1,5 @@
 const { Project } = require("../models/data.model");
+const hedleError = require("../helpers/utils");
 
 exports.allProject = async (req, res) => {
     const projects = await Project.find();
@@ -26,35 +27,49 @@ exports.updateProject = async (req, res) => {
     //     data: project
     // })
 
-    const data = {
-        name: req.body.name,
-        description: req.body.description,
-        updatedAt: Date.now()
+    try {
+        if (!req.body.name) {
+            throw ({ code: "THROW", message: "Name is required" })
+        }
+        const data = {
+            name: req.body.name,
+            description: req.body.description,
+            updatedAt: Date.now()
+        }
+        const project = await Project.findByIdAndUpdate(req.params.id, data);
+        return res.json({
+            success: true,
+            message: "Project updated successfully",
+            data: project
+        })
+    } catch (err) {
+        hedleError.outError(err, res)
     }
-    const project = await Project.findByIdAndUpdate(req.params.id, data);
-    return res.json({
-        success: true,
-        message: "Project updated successfully",
-        data: project
-    })
 }
 
 exports.createProject = async (req, res) => {
-    const data = {
-        name: req.body.name,
-        description: req.body.description,
-        createdAt: Date.now(),
-        updatedAt: null
+    try {
+        if (!req.body.name) {
+            throw ({ code: "THROW", message: "Name is required" })
+        }
+        const data = {
+            name: req.body.name,
+            description: req.body.description,
+            createdAt: Date.now(),
+            updatedAt: null
+        }
+
+        const project = new Project(data);
+        await project.save();
+
+        return res.json({
+            success: true,
+            message: "Project created successfully",
+            data: project
+        })
+    } catch (err) {
+        hedleError.outError(err, res)
     }
-
-    const project = new Project(data);
-    await project.save();
-
-    return res.json({
-        success: true,
-        message: "Project created successfully",
-        data: project
-    })
 }
 
 exports.deleteProject = async (req, res) => {
