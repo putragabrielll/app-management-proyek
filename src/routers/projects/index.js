@@ -12,6 +12,7 @@ projectsRouter.delete("/:id", projectsController.deleteProject);
 
 // End point Tugas
 projectsRouter.get("/:projectId/tasks", TugasController.allTugasbyProject);
+projectsRouter.get("/:projectId/tasks/waiting", TugasController.tugasNotCompletedbyProject);
 projectsRouter.post("/:projectId/tasks", TugasController.createTugasbyProject);
 
 module.exports = projectsRouter;

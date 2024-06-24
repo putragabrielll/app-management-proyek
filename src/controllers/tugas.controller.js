@@ -17,6 +17,7 @@ exports.updateTugas = async (req, res) => {
     try {
         const data = {
             title: req.body.title,
+            status: req.body.status,
             description: req.body.description,
             startTime: new Date((req.body.startTime)).toISOString(),
             endTime: new Date((req.body.endTime)).toISOString(),
@@ -52,6 +53,7 @@ exports.createTugasbyProject = async (req, res) => {
         const data = {
             projectId: req.params.projectId,
             title: req.body.title,
+            status: false,
             description: req.body.description,
             startTime: new Date((req.body.startTime)).toISOString(),
             endTime: new Date((req.body.endTime)).toISOString(),
@@ -86,4 +88,16 @@ exports.deleteTugas = async (req, res) => {
     } catch (err) {
         hedleError.outError(err, res)
     }
+}
+
+exports.tugasNotCompletedbyProject = async (req, res) => {
+    const tugas = await Tugas.find({
+        projectId: req.params.projectId,
+        status: false
+    });
+    return res.json({
+        success: true,
+        message: `Tugas not completed by project id ${req.params.projectId}`,
+        data: tugas
+    })
 }

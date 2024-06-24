@@ -10,6 +10,7 @@ exports.Project = mongoose.model("Project", {
 exports.Tugas = mongoose.model("Tugas", {
     projectId: String,
     title: String,
+    status: Boolean,
     description: String,
     startTime: String,
     endTime: String,
