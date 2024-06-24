@@ -1,0 +1,25 @@
+{
+  "name": "app-management-proyek",
+  "version": "1.0.0",
+  "description": "Aplikasi management project dengan menggunakan Express.Js",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "management"
+  ],
+  "author": "Gabriel putra sihombing",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.3",
+    "morgan": "^1.10.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
