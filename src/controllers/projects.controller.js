@@ -27,13 +27,6 @@ exports.oneProject = async (req, res) => {  // Function untuk memunculkan satu p
 }
 
 exports.updateProject = async (req, res) => {
-    // const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    // return res.json({
-    //     success: true,
-    //     message: "Project updated successfully",
-    //     data: project
-    // })
-
     try {
         const data = {
             name: req.body.name,
