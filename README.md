@@ -26,7 +26,7 @@ To run the project locally, follow these simple steps:
   npm run dev
 ```
 
-#### 📌 If you want to runing this project on Docker, you can next this command
+#### 📌 If you want to runing this project on Docker, you can run this command
 
 5. run this command for build image
 ```sh
