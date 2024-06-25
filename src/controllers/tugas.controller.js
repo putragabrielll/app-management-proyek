@@ -8,7 +8,7 @@ exports.allTugasbyProject = async (req, res) => {
     try {
         const project = await Project.findById(req.params.projectId);
         if (!project) { // Jika project tidak ditemukan
-            throw ({ code: "THROW", message: "Project not found" })
+            throw ({ code: "THROW", message: "Project not found", status: 404 })
         }
         const tugas = await Tugas.find({ projectId: req.params.projectId }); // Function untuk memunculkan semua tugas berdasarkan id project
         return res.json({
@@ -32,11 +32,11 @@ exports.updateTugas = async (req, res) => {
             updatedAt: Date.now()
         }
         if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) { // Jika data tidak ada atau tidak diisi
-            throw ({ code: "THROW", message: "Data cannot be empty" })
+            throw ({ code: "THROW", message: "Data cannot be empty", status: 400 })
         }
         const tugas = await Tugas.findByIdAndUpdate(req.params.id, data);
         if (!tugas) { // Jika tugas tidak ditemukan
-            throw ({ code: "THROW", message: "Tugas not found" })
+            throw ({ code: "THROW", message: "Tugas not found", status: 404 })
         }
         return res.json({
             success: true,
@@ -52,11 +52,11 @@ exports.createTugasbyProject = async (req, res) => {
     try {
         const project = await Project.findById(req.params.projectId);
         if (!project) { // Jika project tidak ditemukan
-            throw ({ code: "THROW", message: "Project not found" })
+            throw ({ code: "THROW", message: "Project not found", status: 404 })
         } else if ((!req.body.title) || (!req.body.startTime) || (!req.body.endTime)) { // Jika data tidak ada atau tidak diisi
-            throw ({ code: "THROW", message: "Data cannot be empty" })
+            throw ({ code: "THROW", message: "Data cannot be empty", status: 400 })
         } else if (moment(req.body.startTime).isAfter(req.body.endTime, "minute")) { // Jika start time lebih besar dari end time atau sebaliknya
-            throw ({ code: "THROW", message: "Start time cannot be greater than end time" })
+            throw ({ code: "THROW", message: "Start time cannot be greater than end time", status: 400 })
         }
         const data = {
             projectId: req.params.projectId,
@@ -86,7 +86,7 @@ exports.deleteTugas = async (req, res) => {
     try {
         const tugas = await Tugas.findByIdAndDelete(req.params.id);
         if (!tugas) { // Jika tugas tidak ditemukan
-            throw ({ code: "THROW", message: "Tugas not found" })
+            throw ({ code: "THROW", message: "Tugas not found", status: 404 })
         }
         return res.json({
             success: true,
@@ -102,7 +102,7 @@ exports.tugasNotCompletedbyProject = async (req, res) => {
     try {
         const project = await Project.findById(req.params.projectId);
         if (!project) { // Jika project tidak ditemukan
-            throw ({ code: "THROW", message: "Project not found" })
+            throw ({ code: "THROW", message: "Project not found", status: 404 })
         }
         const tugas = await Tugas.find({ // Function untuk memunculkan semua tugas yang belum completed berdasarkan id project
             projectId: req.params.projectId,

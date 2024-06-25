@@ -14,7 +14,7 @@ exports.oneProject = async (req, res) => {  // Function untuk memunculkan satu p
     try {
         const project = await Project.findById(req.params.id);
         if (!project) { // Jika project tidak ditemukan
-            throw ({ code: "THROW", message: "Project not found" })
+            throw ({ code: "THROW", message: "Project not found", status: 404 })
         }
         return res.json({
             success: true,
@@ -34,11 +34,11 @@ exports.updateProject = async (req, res) => {
             updatedAt: Date.now()
         }
         if (!req.body.name) { // Jika name tidak ada atau tidak diisi
-            throw ({ code: "THROW", message: "Name is required" })
+            throw ({ code: "THROW", message: "Name is required", status: 400 })
         }
         const project = await Project.findByIdAndUpdate(req.params.id, data);
         if (!project) { // Jika project tidak ditemukan
-            throw ({ code: "THROW", message: "Project not found" })
+            throw ({ code: "THROW", message: "Project not found", status: 404 })
         }
         return res.json({
             success: true,
@@ -53,7 +53,7 @@ exports.updateProject = async (req, res) => {
 exports.createProject = async (req, res) => {
     try {
         if (!req.body.name) { // Jika name tidak ada atau tidak diisi
-            throw ({ code: "THROW", message: "Name is required" })
+            throw ({ code: "THROW", message: "Name is required", status: 400 })
         }
         const data = {
             name: req.body.name,
@@ -79,7 +79,7 @@ exports.deleteProject = async (req, res) => {
     try {
         const project = await Project.findByIdAndDelete(req.params.id);
         if (!project) { // Jika project tidak ditemukan
-            throw ({ code: "THROW", message: "Project not found" })
+            throw ({ code: "THROW", message: "Project not found", status: 404 })
         }
         return res.json({
             success: true,
